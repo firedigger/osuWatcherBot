@@ -33,12 +33,14 @@ irc_client.addListener('connect', function(){
     console.log('Connected!');
 });
 
-var debug = false;
+var debug = true;
 
 if (debug)
 {
     irc_client.connect(1,function() {
-        irc_client.say(username,'!pp');
+        irc_client.say(username,'!watch hvick225');
+        irc_client.say(username,'!update');
+        irc_client.say(username,'!update');
     });
 }
 else
