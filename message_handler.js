@@ -13,20 +13,54 @@ commands['pp'] = function(processor, args, callback){
 commands['watch'] = function(processor, args, callback)
 {
     var watch_object = watcher_factory.watcher_factory(args);
-    processor.watch(watch_object);
-    callback('Watching ' + watch_object.toString());
+    if (check_watcher(watch_object)) {
+        if (processor.watch(watch_object))
+            callback('Watching ' + watch_object.toString());
+        else
+            callback('You are already watching ' + watch_object.toString());
+    }
+    else
+        callback('Error parsing watcher object');
 };
 commands['unwatch'] = function(processor, args, callback)
 {
     var watch_object = watcher_factory.watcher_factory(args);
-    processor.unwatch(watch_object);
-    callback('Stopped watching ' + watch_object.toString());
+    if (check_watcher(watch_object))
+    {
+        processor.unwatch(watch_object);
+        callback('Stopped watching ' + watch_object.toString());
+    }
+    else
+        callback('Error parsing watcher object');
 };
 commands['update'] = function(processor, args, callback)
 {
     processor.update(callback);
 };
+commands['help'] = function(processor, args, callback)
+{
+    callback(['Welcome to firedigger\'s osuWatcherBot!', 'This tool is intended to allow you to keep track of several players\' performance with a single command', 'First, do several \'!watch player_name\', then do \!update when you want to check if anyone has done anything','Commands:','\!watch \<player name>','\!unwatch \<player name>','\!update - get the feed','\!pp - print the pp for you last play if applicable']);
+};
+commands['kill'] = function(processor, args, callback)
+{
+    if (args.join(' ') === 'Killer is dead') {
+        callback('Shutting down, master!',5);
+    }
+    else
+        callback('Kill yourself!');
+};
+commands['save'] = function(processor, args, callback)
+{
+    if (args.join(' ') === 'data') {
+        callback('Saved data, master!',13);
+    }
+    else
+        callback('Save yourself!');
+};
 
+function check_watcher(watcher) {
+    return !!watcher;
+}
 
 function parse_message(processor, command, callback)
 {

@@ -18,24 +18,26 @@ watcher_player.prototype.get_state = function(callback)
     osu_api_processor.get_player_state(this.player,callback);
 };
 
-watcher_player.prototype.check_update = function(new_state,callback)
-{
-    if (!this.state)
-        callback(true);
-    else
-        callback(!(new_state.equals(this.state)));
-};
-
 watcher_player.prototype.toString = function(){
     return this.player;
 };
 
 watcher_player.prototype.generate_update_message = function(old_state, new_state, callback) {
-    callback('state changed!');
+
+    if (old_state) {
+        var delta_pp = new_state.pp - old_state.pp;
+
+        var delta_rank = new_state.rank - old_state.rank;
+        callback(this.player + ' has gained ' + delta_pp + ' pp and ' + (delta_rank < 0 ? 'gained' : 'lost') + ' ' + Math.abs(delta_rank) + ' ranks!');
+    }
+    else
+    {
+        callback(this.player + ' has ' + new_state.pp + ' pp and ' + new_state.rank + ' rank!');
+    }
 };
 
 watcher_player.prototype.generate_empty_message = function(callback) {
-    callback('state didn\'t change.');
+    callback(this.player + '\'s state didn\'t change.');
 };
 
 util.inherits(watcher_player,watcher);

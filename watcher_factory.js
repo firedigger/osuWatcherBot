@@ -7,8 +7,15 @@ var watcher = require('./watcher');
 
 function watcher_factory(args)
 {
-    if (args.length === 1)
-        return new watcher_player(args[0]);
+    if (!args)
+        return undefined;
+
+    if (args[0] === 'b')
+    {
+
+    }
+    else
+        return new watcher_player(args.join(' '));
 }
 
 module.exports.watcher_factory = watcher_factory;

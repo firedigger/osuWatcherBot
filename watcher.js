@@ -31,5 +31,13 @@ watcher.prototype.update = function(callback){
     });
 };
 
+watcher.prototype.check_update = function(new_state,callback)
+{
+    if (!this.state)
+        callback(true);
+    else {
+        callback(!(new_state.equals(this.state)));
+    }
+};
 
 module.exports = watcher;
