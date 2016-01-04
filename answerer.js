@@ -58,10 +58,8 @@ answerer.deserialize_processors = function (str)
             //console.log(arr_watchlist);
             for(var i = 0; i < arr_watchlist.length; ++i) {
                 //console.log('1');
-                watchlist.set(arr_watchlist[i][0], watcher_factory.watcher_factory([arr_watchlist[i][0]]));
-                //console.log('1 ' + watchlist.get(arr_watchlist[i][0]));
-                watchlist.get(arr_watchlist[i][0]).state = arr_watchlist[i][1].state;
-                //console.log(watchlist.get(arr_watchlist[i][0]).state);
+                var watcher = watcher_factory.deserialize_watcher(arr_watchlist[i]);
+                watchlist.set(watcher.key(), watcher);
                 //console.log(watchlist);
             }
             //console.log(watchlist);
@@ -93,18 +91,6 @@ answerer.prototype.send_answer = function(to, message)
 };
 
 
-function parse_code(code)
-{
-    if (code === 13)
-    {
-        self.save();
-    }
-    if (code === 5)
-    {
-        process.exit();
-    }
-}
-
 answerer.prototype.process = function(from, message) {
     //console.log('1');
     var self = this;
@@ -116,11 +102,18 @@ answerer.prototype.process = function(from, message) {
     }
 
     message_handler.handle_message(this.user_processors[from], new command(message.slice(1)), function(answer, code){
+        self.send_answer(from,answer);
         if (code)
         {
-            parse_code(code);
+                if (code === 13)
+                {
+                    self.save();
+                }
+                if (code === 5)
+                {
+                    process.exit();
+                }
         }
-        self.send_answer(from,answer);
     });
 };
 

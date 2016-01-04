@@ -3,9 +3,9 @@
  */
 
 
-function watcher_player_state() {
-    this.rank = 0;
-    this.pp = 0;
+function watcher_player_state(rank, pp) {
+    this.rank = rank;
+    this.pp = pp;
 }
 
 watcher_player_state.prototype.equals = function (state) {
@@ -16,5 +16,11 @@ watcher_player_state.prototype.toString = function () {
     return 'Rank = ' + this.rank + ', PP = ' + this.pp;
 };
 
+watcher_player_state.prototype.construct = function (other) {
+    if (other) {
+        this.rank = other.rank;
+        this.pp = other.pp;
+    }
+};
 
 module.exports = watcher_player_state;

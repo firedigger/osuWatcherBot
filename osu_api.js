@@ -104,7 +104,7 @@ OsuApi.prototype.getScoresRaw = (function(obj, callback) {
 });
 
 OsuApi.prototype.getScores = (function(beatmapId, userId, callback) {
-    var params = {b: beatmapId, m: this.mode};
+    var params = {b: beatmapId, m: this.mode, limit: 10};
     if(typeof userId == 'function') {
         callback = userId;
     } else if(userId) {

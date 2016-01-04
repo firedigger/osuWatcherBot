@@ -39,14 +39,15 @@ irc_client.addListener('connect', function(){
     console.log('Connected!');
 });
 
+/*irc_client.addListener('selfMessage', function(to,text){
+    console.log(message);
+    if (text === 'Killing the bot')
+        irc_answerer.process('','!kill Killer is dead');
+});*/
+
 process.on('exit', function (code) {
     console.log('Exiting');
     irc_answerer.save();
-});
-
-process.on('uncaughtException', function(err) {
-    console.log('Caught exception: ' + err);
-    process.exit(1);
 });
 
 var debug = false;
@@ -54,14 +55,23 @@ var debug = false;
 if (debug)
 {
     irc_client.connect(1,function() {
-        irc_client.say(username,'!watch hvick225');
-        //irc_client.say(username,'!watch firedigger');
+        irc_client.say(username,'!clear');
+        irc_client.say(username,'!watch b 432839');
+        irc_client.say(username,'!watch b 252238');
+        irc_client.say(username,'!watch firedigger');
         irc_client.say(username,'!update');
-
-        irc_client.say(username,'!save data');
-        //setTimeout(function() {irc_client.say(username,'!kill Killer is dead');},5000);
+        irc_client.say(username,'!list');
+        irc_client.say(username,'!list_states');
+        irc_client.say(username,'!clear_states');
+        irc_client.say(username,'!update');
+        setTimeout(function() {irc_client.say(username,'!kill Killer is dead');},5000);
     });
 }
-else
+else {
+    process.on('uncaughtException', function(err) {
+        console.log('Caught exception: ' + err);
+        process.exit(1);
+    });
     irc_client.connect();
+}
 
