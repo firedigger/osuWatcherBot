@@ -5,6 +5,7 @@ This tool is intended to allow you to keep track of several players' performance
 
 Avaiable commands  
 
+ - !help - show this help
  - !watch <player_name>
  - !watch b <beatmap_id>
  - !unwatch <identifier>
