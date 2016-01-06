@@ -3,7 +3,9 @@
  */
 
 var osu_api = require('./osu_api');
-var osu = new osu_api.Api('0f5737accd3afa91a03e620495d1e448ef02e4b5');
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('config.json'));
+var osu = new osu_api.Api(config.api_key);
 var player_state = require('./watcher_player_state');
 var map_state = require('./watcher_map_state');
 var global_utils = require('./global_utils');
@@ -33,19 +35,57 @@ module.exports.get_player_state = function(player, callback)
     });
 };
 
+
+function find_new_plays(list, date)
+{
+    if (date == null)
+        return [];
+    return list.map(function(el){return global_utils.parse_osu_date(el.date);}).filter(function(el){return el > date});
+}
+
+module.exports.find_new_plays = find_new_plays;
+
+module.exports.parse_approved = function(num)
+{
+    //console.log(num);
+    switch (+num) {
+        case 3: return 'qualified';
+        case 2: return 'approved';
+        case 1: return 'ranked';
+        case 0: return 'pending';
+        case -1: return 'WIP';
+        case -2: return 'graveyard';
+        default: return 'unknown';
+    }
+};
+
 module.exports.get_map_state = function(beatmap_id, callback)
 {
-    osu.getScores(beatmap_id,function(error,output){
+    osu.getBeatmap(beatmap_id, function(error,output){
         if (handle_error(error))
         {
-            //console.log(output);
-            if (output)
-            {
-                var state = new map_state(output);
-                callback(state);
+            if (output) {
+                var approved = output.approved;
+                if (approved > 0) {
+                    osu.getScores(beatmap_id, function (error, output) {
+                        if (handle_error(error)) {
+                            if (output) {
+                                callback({list: output, approved: approved});
+                            }
+                        }
+                    });
+                }
+                else
+                    callback({approved: approved});
             }
+            else
+                callback(undefined);
         }
     });
+
+
+
+
 };
 
 

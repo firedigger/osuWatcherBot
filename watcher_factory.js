@@ -29,6 +29,8 @@ function deserialize_watcher(watcher)
 {
     //console.log(watcher);
     var new_watcher = watcher_factory(watcher[0]);
+    /*if (!watcher[1].state)
+        return undefined;*/
     new_watcher.construct(watcher[1]);
     //console.log(new_watcher);
     return new_watcher;

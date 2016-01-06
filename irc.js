@@ -2,9 +2,16 @@ const irc = require('irc');
 
 var answerer = require('./answerer');
 var fs = require('fs');
+var global_utils = require('./global_utils');
+
+var config = JSON.parse(fs.readFileSync('config.json'));
+
+//global_utils.parse_osu_date('2013-07-02 01:01:12');
+
+//process.exit();
 
 const username = 'firedigger';
-const irc_password = '783831d1';
+const irc_password = config.irc_password;
 
 const irc_client = new irc.Client('irc.ppy.sh', username, {
 	userName: username,
@@ -39,6 +46,13 @@ irc_client.addListener('connect', function(){
     console.log('Connected!');
 });
 
+irc_client.addListener('disconnect', function(){
+    console.log('Disconnected!');
+    irc_answerer.save();
+    console.log('Seems like there\'s nothing more to do!');
+    process.exit();
+});
+
 /*irc_client.addListener('selfMessage', function(to,text){
     console.log(message);
     if (text === 'Killing the bot')
@@ -50,14 +64,14 @@ process.on('exit', function (code) {
     irc_answerer.save();
 });
 
-var debug = false;
+var debug = true;
 
 if (debug)
 {
     irc_client.connect(1,function() {
         irc_client.say(username,'!clear');
         irc_client.say(username,'!watch b 432839');
-        irc_client.say(username,'!watch b 252238');
+        irc_client.say(username,'!watch b 870031');
         irc_client.say(username,'!watch firedigger');
         irc_client.say(username,'!update');
         irc_client.say(username,'!list');

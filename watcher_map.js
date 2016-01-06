@@ -6,6 +6,7 @@ var watcher = require('./watcher');
 var watcher_map_state = require('./watcher_map_state');
 var osu_api_processor = require('./osu_api_processor');
 var util = require('util');
+var global_utils = require('./global_utils');
 
 function watcher_map(beatmap_id) {
     watcher_map.super_.apply(this,arguments);
@@ -14,11 +15,38 @@ function watcher_map(beatmap_id) {
     this.state = undefined;
 }
 
+watcher_map.prototype.update = function(callback){
+    var self = this;
+    this.get_state(function(state){
+        if (state) {
+            //console.log(self.beatmap_id);
+            self.check_update(state, function (update_new) {
+                    if (update_new || self.state.date == null) {
+                        var old_state = self.state;
+                        self.state = new watcher_map_state(state.approved,state.list ? state.list[0] : undefined,(new Date()).getTime());
+                        self.generate_update_message(old_state, state, function (message) {
+                            callback(message);
+                        });
+                    }
+                    else {
+                        self.generate_empty_message(callback);
+                    }
+                }
+            );
+        }
+        else
+        {
+            //console.log(self);
+            callback('Error updating ' + self.toString());
+        }
+    });
+};
+
+
 watcher_map.prototype.construct = function(other){
     this.beatmap_id = other.beatmap_id;
     this.beatmap_name = other.beatmap_name;
     this.state = new watcher_map_state();
-    //console.log(other);
     this.state.construct(other.state);
 };
 
@@ -34,8 +62,15 @@ watcher_map.prototype.check_update = function(new_state,callback)
     var a = function() {
         if (!self.state)
             callback(true);
-        else {
-            callback(!(new_state.equals(self.state)));
+        else
+        if (self.state.approved === new_state.approved)
+        {
+            var l = osu_api_processor.find_new_plays(new_state,this.state.date);
+            callback(l.length > 0);
+        }
+        else
+        {
+            callback(true);
         }
     };
 
@@ -64,25 +99,20 @@ watcher_map.prototype.generate_update_message = function(old_state, new_state, c
     var self = this;
 
     if (!old_state)
-        callback(self.toString() + ': ' + new_state.toString());
-    else {
-        var old_list = old_state.list.map(function (el) {
-            return el.username;
-        });
+        callback(self.toString() + ': ' + self.state.toString());
+    else
+    if (new_state.approved > 0)
+    {
+        if (!old_state.date)
+            old_state.date = new Date();
+        var new_list = osu_api_processor.find_new_plays(new_state.list, old_state.date);
 
-        var new_list = new_state.list.map(function (el) {
-            return el.username;
-        });
-
-        var i;
-        for (i = 0; i < Math.min(old_list.length, new_list.length); ++i)
-            if (old_list[i].score !== new_list[i].score || old_list[i].username !== new_list[i].username)
-                break;
-
-        //console.log(new_state);
-        i--;
-        callback('New #' + i + ' score: ' + osu_api_processor.print_score(new_state.list[i]));
-
+        for(var i = 0; i < new_list.length; ++i)
+            callback('New #' + i + ' score: ' + osu_api_processor.print_score(new_state.list[new_list[i]]));
+    }
+    else
+    {
+        callback(' is now ' + osu_api_processor.parse_approved(new_state.approved));
     }
 };
 

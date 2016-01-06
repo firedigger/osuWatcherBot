@@ -18,9 +18,6 @@ function answerer(irc_client, user_processors)
 function mapToJson(map) {
     return JSON.stringify([...map]);
 }
-function jsonToMap(jsonStr) {
-    return new Map(JSON.parse(jsonStr));
-}
 
 answerer.prototype.save = function(){
     console.log('Saving');
@@ -59,7 +56,8 @@ answerer.deserialize_processors = function (str)
             for(var i = 0; i < arr_watchlist.length; ++i) {
                 //console.log('1');
                 var watcher = watcher_factory.deserialize_watcher(arr_watchlist[i]);
-                watchlist.set(watcher.key(), watcher);
+                if (watcher)
+                    watchlist.set(watcher.key(), watcher);
                 //console.log(watchlist);
             }
             //console.log(watchlist);
@@ -83,6 +81,9 @@ answerer.prototype.send_answer = function(to, message)
     if (!message)
         return;
 
+    if (message.length === 0)
+        return;
+
     if (Array.isArray(message))
         for(var i = 0; i < message.length; ++i)
             this.send_message(to,message[i]);
@@ -92,7 +93,6 @@ answerer.prototype.send_answer = function(to, message)
 
 
 answerer.prototype.process = function(from, message) {
-    //console.log('1');
     var self = this;
 
     if (!this.user_processors[from])

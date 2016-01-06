@@ -38,6 +38,7 @@ commands['unwatch'] = function(processor, args, callback)
 commands['update'] = function(processor, args, callback)
 {
     processor.update(callback);
+    callback('',13);
 };
 commands['help'] = function(processor, args, callback)
 {

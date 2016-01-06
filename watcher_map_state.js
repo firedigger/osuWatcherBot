@@ -3,6 +3,7 @@
  */
 
 var osu_api_processor = require('./osu_api_processor');
+var global_utils = require('./global_utils');
 
 /*function string_hash(str)
 {
@@ -16,24 +17,43 @@ var osu_api_processor = require('./osu_api_processor');
     return hash;
 }*/
 
-function calc_map_hash(list)
+/*function calc_map_hash(list)
 {
     return list.map(function (el) {
         return el.score;
     }).reduce(function(pv, cv) { return pv + cv; }, 0);
+}*/
+
+function watcher_map_state(approved, top_score, date) {
+    this.approved = approved;
+    this.score = top_score;
+    this.date = date;
 }
 
-function watcher_map_state(list) {
-    this.list = list;
-    this.hash = list ? calc_map_hash(list) : 0;
+
+function parse_from_list(list)
+{
+    var score = list[0];
+    var approved = undefined;
+    var date = global_utils.max(list.map(function(el){return global_utils.parse_osu_date(el.date);}));
+    console.log(date);
+    return {score: score, approved : approved, date : date};
 }
+
 
 watcher_map_state.prototype.construct = function (other) {
-    this.list = other.list;
-    this.hash = other.hash;
+
+    if (other.list)
+    {
+        other = parse_from_list(other.list);
+    }
+    this.score = other.score;
+    if (Array.isArray(other.date))
+        this.date = global_utils.max(other.date);
+    this.approved = other.approved;
 };
 
-watcher_map_state.prototype.equals = function (state) {
+/*watcher_map_state.prototype.equals = function (state) {
 
     if (state.hash != this.hash)
         return false;
@@ -43,10 +63,14 @@ watcher_map_state.prototype.equals = function (state) {
             return false;
 
     return true;
-};
+};*/
 
 watcher_map_state.prototype.toString = function () {
-   return osu_api_processor.print_score(this.list[0]);
+    //console.log(this.date);
+    if (this.approved > 0)
+        return osu_api_processor.print_score(this.score);
+    else
+        return osu_api_processor.parse_approved(this.approved);
 };
 
 

@@ -3,6 +3,7 @@
   "description": "irc bot for the osu!bancho server",
   "dependencies": {
     "irc": "^3.0",
+    "moment": "^2.11.0",
     "node-serialize": "0.0.4",
     "request": "^2.67.0"
   },

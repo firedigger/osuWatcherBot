@@ -51,7 +51,7 @@ processor.prototype.list_states = function (callback) {
     else
         for (var watcher of this.watchlist.values())
         {
-            callback(watcher.toString() + ': ' + (watcher ? watcher.state.toString() : ' unknown state'));
+            callback(watcher.toString() + ': ' + (watcher.state ? watcher.state.toString() : ' unknown state'));
         }
 };
 
