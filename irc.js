@@ -59,12 +59,28 @@ irc_client.addListener('disconnect', function(){
         irc_answerer.process('','!kill Killer is dead');
 });*/
 
+if (process.platform === "win32") {
+    var rl = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rl.on("SIGINT", function () {
+        process.emit("SIGINT");
+    });
+}
+
+process.on("SIGINT", function () {
+    //graceful shutdown
+    process.exit();
+});
+
 process.on('exit', function (code) {
     console.log('Exiting');
     irc_answerer.save();
 });
 
-var debug = true;
+var debug = false;
 
 if (debug)
 {

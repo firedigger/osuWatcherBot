@@ -4,6 +4,7 @@
 
 var osu_api_processor = require('./osu_api_processor');
 var watcher_factory = require('./watcher_factory');
+var only_once_callback = require('./only_once_callback');
 
 var commands = {};
 
@@ -38,7 +39,6 @@ commands['unwatch'] = function(processor, args, callback)
 commands['update'] = function(processor, args, callback)
 {
     processor.update(callback);
-    callback('',13);
 };
 commands['help'] = function(processor, args, callback)
 {
@@ -68,7 +68,7 @@ commands['clear'] = function(processor, args, callback)
 commands['clear_states'] = function(processor, args, callback)
 {
     processor.clear_states();
-    callback('Cleare states!');
+    callback('Cleared states!');
 };
 commands['list'] = function(processor, args, callback)
 {
