@@ -24,7 +24,7 @@ watcher_map.prototype.update = function(callback){
                     if (update_new || self.state.date == null) {
                         var old_state = self.state;
                         self.state = new watcher_map_state(state.approved,state.list ? state.list[0] : undefined,(new Date()).getTime());
-                        self.generate_update_message(old_state, state, function (message) {
+                        self.generate_update_message(old_state, state, state.list, function (message) {
                             callback(message);
                         });
                     }
@@ -65,7 +65,7 @@ watcher_map.prototype.check_update = function(new_state,callback)
         else
         if (self.state.approved === new_state.approved)
         {
-            var l = osu_api_processor.find_new_plays(new_state,this.state.date);
+            var l = osu_api_processor.find_new_plays(new_state,self.state.date);
             callback(l.length > 0);
         }
         else
@@ -76,7 +76,7 @@ watcher_map.prototype.check_update = function(new_state,callback)
 
     if (!self.beatmap_name)
     {
-        osu_api_processor.get_beatmap_name(this.beatmap_id,function(name){
+        osu_api_processor.get_beatmap_name(self.beatmap_id,function(name){
             //console.log('got beatmap name ' + name);
             self.beatmap_name = name;
             a();
@@ -94,7 +94,7 @@ watcher_map.prototype.key = function(){
     return 'b ' + this.beatmap_id;
 };
 
-watcher_map.prototype.generate_update_message = function(old_state, new_state, callback) {
+watcher_map.prototype.generate_update_message = function(old_state, new_state, score_list, callback) {
 
     var self = this;
 
@@ -104,15 +104,15 @@ watcher_map.prototype.generate_update_message = function(old_state, new_state, c
     if (new_state.approved > 0)
     {
         if (!old_state.date)
-            old_state.date = new Date();
-        var new_list = osu_api_processor.find_new_plays(new_state.list, old_state.date);
+            old_state.date = (new Date()).getTime();
+        var new_list = osu_api_processor.find_new_plays(score_list, old_state.date);
 
         for(var i = 0; i < new_list.length; ++i)
-            callback('New #' + i + ' score: ' + osu_api_processor.print_score(new_state.list[new_list[i]]));
+            callback('New #' + new_list[i].pos + ' score on ' + self.toString() + ': ' + osu_api_processor.print_score(new_list[i]));
     }
     else
     {
-        callback(' is now ' + osu_api_processor.parse_approved(new_state.approved));
+        callback(self.toString() + ' is now ' + osu_api_processor.parse_approved(new_state.approved));
     }
 };
 

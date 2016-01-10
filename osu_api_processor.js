@@ -26,7 +26,7 @@ module.exports.get_player_state = function(player, callback)
         if (handle_error(error))
         {
             if (info) {
-                var state = new player_state(info.pp_rank,info.pp_raw);
+                var state = new player_state(info.pp_rank,info.pp_raw,(new Date()).getTime());
                 callback(state);
             }
             else
@@ -38,12 +38,30 @@ module.exports.get_player_state = function(player, callback)
 
 function find_new_plays(list, date)
 {
-    if (date == null)
-        return [];
-    return list.map(function(el){return global_utils.parse_osu_date(el.date);}).filter(function(el){return el > date});
+    var res;
+    console.log(date);
+    if (date == undefined || date == null)
+        res = [];
+    else
+        res = list.map(function(el,i){el.pos = i; return el;}).map(function(el){ el.date = global_utils.parse_osu_date(el.date); return el;}).filter(function(el){return el.date > date});
+    console.log(res);
+    return res;
 }
 
 module.exports.find_new_plays = find_new_plays;
+
+module.exports.get_beatmap_score_list = function(beatmap_id, callback)
+{
+    osu.getScores(beatmap_id,function(err,output){callback(output);});
+};
+
+module.exports.get_user_top_list = function(user, callback)
+{
+    osu.getUserBest(user,function(err,output){
+        if (handle_error(err))
+            callback(output);
+    });
+};
 
 module.exports.parse_approved = function(num)
 {
@@ -106,7 +124,7 @@ function parse_mods(num)
     }
     //console.log(res);
     return res.join('');
-};
+}
 
 module.exports.parse_mods = parse_mods;
 

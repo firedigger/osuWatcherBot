@@ -89,6 +89,8 @@ function parse_message(processor, command, callback)
     {
         commands[command.command].call(this, processor, command.args, callback);
     }
+    else
+        callback('Invalid command. Try !help if you are lost.');
 }
 
 module.exports.handle_message = parse_message;

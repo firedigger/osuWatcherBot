@@ -13,7 +13,7 @@ function round(float,digit)
 
 function max(list)
 {
-    return Math.max.apply(null, list);
+    return Math.max.apply(null, list.map(function(el){return (+el);}));
 }
 
 function parse_osu_date(string)

@@ -47,9 +47,12 @@ watcher_map_state.prototype.construct = function (other) {
     {
         other = parse_from_list(other.list);
     }
+    //console.log(other);
     this.score = other.score;
     if (Array.isArray(other.date))
         this.date = global_utils.max(other.date);
+    else
+        this.date = (+other.date);
     this.approved = other.approved;
 };
 

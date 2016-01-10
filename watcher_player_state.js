@@ -3,9 +3,10 @@
  */
 
 
-function watcher_player_state(rank, pp) {
+function watcher_player_state(rank, pp, date) {
     this.rank = rank;
     this.pp = pp;
+    this.date = date;
 }
 
 watcher_player_state.prototype.equals = function (state) {
@@ -20,6 +21,7 @@ watcher_player_state.prototype.construct = function (other) {
     if (other) {
         this.rank = other.rank;
         this.pp = other.pp;
+        this.date = other.date;
     }
 };
 
