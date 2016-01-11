@@ -43,17 +43,21 @@ function find_new_plays(list, date)
     if (date == undefined || date == null)
         res = [];
     else
-        res = list.map(function(el,i){el.pos = i; return el;}).map(function(el){ el.str_date = el.date; el.date = global_utils.parse_osu_date(el.date); return el;}).filter(function(el){return el.date > date});
+        res = list.map(function(el,i){el.pos = i + 1; return el;}).map(function(el){ el.str_date = el.date; el.date = global_utils.parse_osu_date(el.date); return el;}).filter(function(el){return el.date > date});
     //console.log(res);
     return res;
 }
 
 module.exports.find_new_plays = find_new_plays;
 
-module.exports.get_beatmap_score_list = function(beatmap_id, callback)
+/*module.exports.get_beatmap_score_list = function(beatmap_id, callback)
 {
-    osu.getScores(beatmap_id,function(err,output){callback(output);});
-};
+    osu.getScores(beatmap_id,function(err,output){
+        if (handle_error(error)) {
+                callback(output);
+        }
+    });
+};*/
 
 module.exports.get_user_top_list = function(user, callback)
 {
@@ -106,9 +110,12 @@ module.exports.get_map_state = function(beatmap_id, callback)
 
 module.exports.get_score = function(player,beatmap_id,callback){
     osu.getUserScore(beatmap_id, player, function (error, output) {
-        if (handle_error(error) && output)
+        if (handle_error(error))
         {
-            callback(print_score(output))
+            if (output)
+                callback(print_map_score(output));
+            else
+                callback('Looks like ' + player + ' hasn\'t got a score on this beatmap');
         }
     });
 };

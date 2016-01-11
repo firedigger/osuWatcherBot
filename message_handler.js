@@ -48,7 +48,16 @@ commands['update'] = function(processor, args, callback)
 };
 commands['help'] = function(processor, args, callback)
 {
-    callback(['Welcome to firedigger\'s osuWatcherBot!', 'This tool is intended to allow you to keep track of several players\' performance and map scores with a single command', 'First, do several \'!watch player_name\', then do \!update when you want to check if anyone has done anything','Commands:','\!watch \<player name>','\!watch b \<beatmap_id>','\!unwatch \<identifier>','\!update - get the feed','\!list - list all the current watchers','\!list_states - list all the current watchers with states','\!clear - clear all the watches','\!clear_states - clear all the watchers states (NOTE: this does not clear watchers, only makes the states undefined)','\!pp - print the pp for you last play if applicable','\!score player beatmap_id - get player\'s score on a beatmap'].join('\n'));
+    callback(['Welcome to firedigger\'s osuWatcherBot!', 'This tool is intended to allow you to keep track of several players\' performance and map scores with a single command', 'First, do several \'!watch player_name\', then do \!update when you want to check if anyone has done anything','If you still feel lost, try !example .'].join('\n'));
+    commands['commands'].apply(this,arguments);
+};
+commands['commands'] = function(processor, args, callback)
+{
+    callback(['Commands:','\!help - print help','\!commands - print commands list','!example - print an example of bot usage','\!watch \<player name>','\!watch b \<beatmap_id>','\!unwatch \<identifier>','\!update - get the feed','\!list - list all the current watchers','\!list_states - list all the current watchers with states','\!clear - clear all the watches','\!clear_states - clear all the watchers states (NOTE: this does not clear watchers, only makes the states undefined)','\!pp - print the pp for you last play if applicable','\!score player beatmap_id - get player\'s score on a beatmap'].join('\n'));
+};
+commands['example'] = function(processor, args, callback)
+{
+    callback(['If you are not sure what exactly to write, try this command sequence:','\!watch Cookiezi','\!watch hvick225','\!watch b 529080','\!update'].join('\n'));
 };
 commands['kill'] = function(processor, args, callback)
 {

@@ -98,7 +98,7 @@ answerer.prototype.process = function(from, message) {
     if (!this.user_processors[from])
     {
         this.user_processors[from] = new processor(from);
-        this.send_answer(from,['Hi, ' + from + '! Looks like it\'s your first time using my bot. Thanks for trying it out! Now the bot will create a new processor instance to keep Your personal feed.','I recommend to start by typing !help to see a quick hint.']);
+        //this.send_answer(from,['Hi, ' + from + '! Looks like it\'s your first time using my bot. Thanks for trying it out! Now the bot will create a new processor instance to keep Your personal feed.','I recommend to start by typing !help to see a quick hint.']);
     }
 
     message_handler.handle_message(this.user_processors[from], new command(message.slice(1)), function(answer, code){

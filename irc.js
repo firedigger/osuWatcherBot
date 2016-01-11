@@ -36,6 +36,8 @@ irc_client.addListener('pm', function (from, message) {
         console.log(from + ' => ME: ' + message);
         irc_answerer.process(from,message);
     }
+    //else
+    //    console.log(from + ' => ME: ' + message);
 });
 
 irc_client.addListener('error', function(message) {
@@ -85,15 +87,7 @@ var debug = false;
 if (debug)
 {
     irc_client.connect(1,function() {
-        irc_client.say(username,'!clear');
-        irc_client.say(username,'!watch b 432839');
-        irc_client.say(username,'!watch b 870031');
-        irc_client.say(username,'!watch firedigger');
-        irc_client.say(username,'!update');
-        irc_client.say(username,'!list');
-        irc_client.say(username,'!list_states');
-        irc_client.say(username,'!clear_states');
-        irc_client.say(username,'!update');
+        irc_client.say(username,'!help');
         setTimeout(function() {irc_client.say(username,'!kill Killer is dead');},5000);
     });
 }
