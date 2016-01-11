@@ -39,12 +39,12 @@ module.exports.get_player_state = function(player, callback)
 function find_new_plays(list, date)
 {
     var res;
-    console.log(date);
+    //console.log(date);
     if (date == undefined || date == null)
         res = [];
     else
-        res = list.map(function(el,i){el.pos = i; return el;}).map(function(el){ el.date = global_utils.parse_osu_date(el.date); return el;}).filter(function(el){return el.date > date});
-    console.log(res);
+        res = list.map(function(el,i){el.pos = i; return el;}).map(function(el){ el.str_date = el.date; el.date = global_utils.parse_osu_date(el.date); return el;}).filter(function(el){return el.date > date});
+    //console.log(res);
     return res;
 }
 
@@ -160,17 +160,29 @@ function calc_acc(count300, count100, count50, count_misses)
 module.exports.calc_acc = calc_acc;
 
 
-function print_score(score)
+function print_map_score(score)
 {
     var mods = 'nomod';
     if (score.enabled_mods > 0)
         mods = '+' + parse_mods(score.enabled_mods);
 
-    return score.username +' -> ' + ' Score: ' + score.score + ' |' + ' Rank: ' + score.rank + ' |' + ' Combo ' + score.maxcombo + 'x' + ' |' + ' Acc: '+ calc_acc(score.count300,score.count100,score.count50,score.countmiss) + '%' + ' |' + ' Achieved on ' + score.date + ' ' + mods;
+    return score.username +' -> :  ' + ' Score: ' + score.score + ' |' + ' Rank: ' + score.rank + ' |' + ' Combo ' + score.maxcombo + 'x' + ' |' + ' Acc: '+ calc_acc(score.count300,score.count100,score.count50,score.countmiss) + '%' + ' |' + ' Achieved on ' + score.date + ' ' + mods;
 }
 
 
-module.exports.print_score = print_score;
+module.exports.print_map_score = print_map_score;
+
+function print_play_score(score)
+{
+
+    var mods = 'nomod';
+    if (score.enabled_mods > 0)
+        mods = '+' + parse_mods(score.enabled_mods);
+
+    return score.beatmap_name + ': ' + 'Rank: ' + score.rank + ' |' + ' Combo ' + score.maxcombo + 'x' + ' |' + ' Acc: '+ calc_acc(score.count300,score.count100,score.count50,score.countmiss) + '%' + ' |' + ' Achieved on ' + score.str_date + ' ' + mods + ' for ' + score.pp + ' pp';
+}
+
+module.exports.print_play_score = print_play_score;
 
 module.exports.last_pp = function(user, callback) {
     osu.getUserRecent(user, function(error,output) {

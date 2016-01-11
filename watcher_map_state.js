@@ -36,7 +36,7 @@ function parse_from_list(list)
     var score = list[0];
     var approved = undefined;
     var date = global_utils.max(list.map(function(el){return global_utils.parse_osu_date(el.date);}));
-    console.log(date);
+    //console.log(date);
     return {score: score, approved : approved, date : date};
 }
 
@@ -71,7 +71,7 @@ watcher_map_state.prototype.construct = function (other) {
 watcher_map_state.prototype.toString = function () {
     //console.log(this.date);
     if (this.approved > 0)
-        return osu_api_processor.print_score(this.score);
+        return osu_api_processor.print_map_score(this.score);
     else
         return osu_api_processor.parse_approved(this.approved);
 };

@@ -20,7 +20,7 @@ function parse_osu_date(string)
 {
     //2013-07-02 01:01:12
     var res = moment(string,'YYYY-MM-DD HH:mm:ss').valueOf();
-    console.log(res);
+    //console.log(res);
     return res;
     //return null;
 }

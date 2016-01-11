@@ -82,10 +82,15 @@ watcher_player.prototype.generate_update_message = function(old_state, new_state
         var delta_pp = global_utils.round(new_state.pp - old_state.pp,2);
 
         var delta_rank = new_state.rank - old_state.rank;
-        callback(this.toString() + ' has gained ' + delta_pp + ' pp and ' + (delta_rank < 0 ? 'gained' : 'lost') + ' ' + Math.abs(delta_rank) + ' ranks!');
+        callback(this.toString() + ' has gained ' + delta_pp + ' pp and ' + (delta_rank <= 0 ? 'gained' : 'lost') + ' ' + Math.abs(delta_rank) + ' ranks!');
         osu_api_processor.get_user_top_list(this.player,function(list){
             var top_plays = osu_api_processor.find_new_plays(list,old_state.date);
-            top_plays.forEach(function(el){callback(self.toString() + ': New #' + el.pos + ' top play for ' + el.pp + ' pp');});
+            top_plays.forEach(function(el){
+                osu_api_processor.get_beatmap_name(el.beatmap_id,function(name){
+                    el.beatmap_name = name;
+                    callback(self.toString() + ': New #' + el.pos + ' top play: ' + osu_api_processor.print_play_score(el));
+                });
+            });
         });
     }
     else

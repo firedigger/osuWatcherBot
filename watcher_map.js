@@ -108,7 +108,7 @@ watcher_map.prototype.generate_update_message = function(old_state, new_state, s
         var new_list = osu_api_processor.find_new_plays(score_list, old_state.date);
 
         for(var i = 0; i < new_list.length; ++i)
-            callback('New #' + new_list[i].pos + ' score on ' + self.toString() + ': ' + osu_api_processor.print_score(new_list[i]));
+            callback('New #' + new_list[i].pos + ' score on ' + self.toString() + ': ' + osu_api_processor.print_map_score(new_list[i]));
     }
     else
     {
