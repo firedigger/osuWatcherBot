@@ -11,6 +11,12 @@ var commands = {};
 commands['pp'] = function(processor, args, callback){
     osu_api_processor.last_pp(processor.user,callback);
 };
+commands['score'] = function(processor, args, callback){
+    if (args[0] && args[1])
+        osu_api_processor.get_score(args[0],args[1],callback);
+    else
+        callback('Invalid arguments');
+};
 commands['watch'] = function(processor, args, callback)
 {
     var watch_object = watcher_factory.watcher_factory(args);
@@ -42,7 +48,7 @@ commands['update'] = function(processor, args, callback)
 };
 commands['help'] = function(processor, args, callback)
 {
-    callback(['Welcome to firedigger\'s osuWatcherBot!', 'This tool is intended to allow you to keep track of several players\' performance and map scores with a single command', 'First, do several \'!watch player_name\', then do \!update when you want to check if anyone has done anything','Commands:','\!watch \<player name>','\!watch b \<beatmap_id>','\!unwatch \<identifier>','\!update - get the feed','\!list - list all the current watchers','\!list_states - list all the current watchers with states','\!clear - clear all the watches','\!clear_states - clear all the watchers states (NOTE: this does not clear watchers, only makes the states undefined)','\!pp - print the pp for you last play if applicable']);
+    callback(['Welcome to firedigger\'s osuWatcherBot!', 'This tool is intended to allow you to keep track of several players\' performance and map scores with a single command', 'First, do several \'!watch player_name\', then do \!update when you want to check if anyone has done anything','Commands:','\!watch \<player name>','\!watch b \<beatmap_id>','\!unwatch \<identifier>','\!update - get the feed','\!list - list all the current watchers','\!list_states - list all the current watchers with states','\!clear - clear all the watches','\!clear_states - clear all the watchers states (NOTE: this does not clear watchers, only makes the states undefined)','\!pp - print the pp for you last play if applicable','\!score player beatmap_id - get player\'s score on a beatmap'].join('\n'));
 };
 commands['kill'] = function(processor, args, callback)
 {

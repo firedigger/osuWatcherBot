@@ -101,9 +101,16 @@ module.exports.get_map_state = function(beatmap_id, callback)
         }
     });
 
+};
 
 
-
+module.exports.get_score = function(player,beatmap_id,callback){
+    osu.getUserScore(beatmap_id, player, function (error, output) {
+        if (handle_error(error) && output)
+        {
+            callback(print_score(output))
+        }
+    });
 };
 
 
@@ -128,7 +135,7 @@ function parse_mods(num)
 
 module.exports.parse_mods = parse_mods;
 
-    module.exports.get_beatmap_name = function(beatmap_id, callback)
+module.exports.get_beatmap_name = function(beatmap_id, callback)
 {
     osu.getBeatmap(beatmap_id,function(error,output) {
         if (handle_error(error))
@@ -152,15 +159,18 @@ function calc_acc(count300, count100, count50, count_misses)
 
 module.exports.calc_acc = calc_acc;
 
-module.exports.print_score = function(score)
+
+function print_score(score)
 {
     var mods = 'nomod';
     if (score.enabled_mods > 0)
         mods = '+' + parse_mods(score.enabled_mods);
 
     return score.username +' -> ' + ' Score: ' + score.score + ' |' + ' Rank: ' + score.rank + ' |' + ' Combo ' + score.maxcombo + 'x' + ' |' + ' Acc: '+ calc_acc(score.count300,score.count100,score.count50,score.countmiss) + '%' + ' |' + ' Achieved on ' + score.date + ' ' + mods;
-};
+}
 
+
+module.exports.print_score = print_score;
 
 module.exports.last_pp = function(user, callback) {
     osu.getUserRecent(user, function(error,output) {

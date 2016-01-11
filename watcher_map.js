@@ -60,17 +60,17 @@ watcher_map.prototype.check_update = function(new_state,callback)
     var self = this;
 
     var a = function() {
-        if (!self.state)
+        if (!self.state || self.state.approved !== new_state.approved)
             callback(true);
         else
-        if (self.state.approved === new_state.approved)
         {
-            var l = osu_api_processor.find_new_plays(new_state,self.state.date);
-            callback(l.length > 0);
-        }
-        else
-        {
-            callback(true);
+            if (new_state.approved > 0)
+            {
+                var l = osu_api_processor.find_new_plays(new_state,self.state.date);
+                callback(l.length > 0);
+            }
+            else
+                callback(false);
         }
     };
 

@@ -85,7 +85,7 @@ watcher_player.prototype.generate_update_message = function(old_state, new_state
         callback(this.toString() + ' has gained ' + delta_pp + ' pp and ' + (delta_rank < 0 ? 'gained' : 'lost') + ' ' + Math.abs(delta_rank) + ' ranks!');
         osu_api_processor.get_user_top_list(this.player,function(list){
             var top_plays = osu_api_processor.find_new_plays(list,old_state.date);
-            top_plays.forEach(function(el){callback(self.toString() + ': New $' + el.pos + ' top play for ' + el.pp + ' pp');});
+            top_plays.forEach(function(el){callback(self.toString() + ': New #' + el.pos + ' top play for ' + el.pp + ' pp');});
         });
     }
     else
