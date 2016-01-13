@@ -66,7 +66,7 @@ watcher_map.prototype.check_update = function(new_state,callback)
         {
             if (new_state.approved > 0)
             {
-                var l = osu_api_processor.find_new_plays(new_state,self.state.date);
+                var l = osu_api_processor.find_new_plays(new_state.list,self.state.date);
                 callback(l.length > 0);
             }
             else
@@ -107,8 +107,12 @@ watcher_map.prototype.generate_update_message = function(old_state, new_state, s
             old_state.date = (new Date()).getTime();
         var new_list = osu_api_processor.find_new_plays(score_list, old_state.date);
 
+        var new_plays = [];
+
         for(var i = 0; i < new_list.length; ++i)
-            callback('New #' + new_list[i].pos + ' score on ' + self.toString() + ': ' + osu_api_processor.print_map_score(new_list[i]));
+            new_plays.push(self.toString() + ':' + ' New #' + new_list[i].pos + ' score on ' + self.toString() + ': ' + osu_api_processor.print_map_score(new_list[i]));
+
+        callback(new_plays);
     }
     else
     {

@@ -94,6 +94,8 @@ module.exports.get_map_state = function(beatmap_id, callback)
                             if (output) {
                                 callback({list: output, approved: approved});
                             }
+                            else
+                                callback(undefined);
                         }
                     });
                 }

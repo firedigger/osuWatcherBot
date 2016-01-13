@@ -84,9 +84,12 @@ answerer.prototype.send_answer = function(to, message)
     if (message.length === 0)
         return;
 
-    if (Array.isArray(message))
-        for(var i = 0; i < message.length; ++i)
-            this.send_message(to,message[i]);
+    if (Array.isArray(message)) {
+        var ms = '';
+        for (var i = 0; i < message.length; ++i)
+            ms += message[i] + '\n';
+        this.send_message(to, ms);
+    }
     else
         this.send_message(to,message);
 };

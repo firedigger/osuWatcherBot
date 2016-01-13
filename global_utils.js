@@ -25,8 +25,6 @@ function parse_osu_date(string)
     //return null;
 }
 
-
-
 module.exports.round = round;
 module.exports.parse_osu_date = parse_osu_date;
 module.exports.max = max;
