@@ -60,7 +60,7 @@ watcher_player.prototype.update = function(callback){
                         });
                     }
                     else {
-                        self.generate_empty_message(callback);
+                        //self.generate_empty_message(callback);
                     }
                 }
             );
